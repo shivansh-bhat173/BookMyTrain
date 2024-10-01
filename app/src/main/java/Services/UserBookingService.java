@@ -64,7 +64,7 @@ public class UserBookingService {
         user.printTickets();
     }
 
-    // cancel bookings
+    // cancel bookingss
 
     public Boolean cancelBooking(String ticketId){
          Optional<Ticket> cancelledTicket= user.getTicketsBooked().stream().filter(ticket1 -> {
