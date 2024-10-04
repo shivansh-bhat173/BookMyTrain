@@ -50,6 +50,14 @@ public class Train {
         this.stationTimes = stationTimes;
     }
 
+    public List<String> getStations() {
+        return stations;
+    }
+
+    public void setStations(List<String> stations) {
+        this.stations = stations;
+    }
+
     public String getTrainInfo(){
         return String.format("Train ID : %s Train No : %s",trainId,trainNo);
     }

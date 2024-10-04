@@ -3,12 +3,96 @@
  */
 package org.example;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import Entities.Train;
+import Entities.User;
+import Services.UserBookingService;
+import util.UserServiceUtil;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.UUID;
+
+public class App {
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("Running the train Booking system...");
+
+        Scanner scn = new Scanner(System.in);
+        int option = 0;
+        UserBookingService userbookingService = null;
+        try{
+             userbookingService = new UserBookingService();
+        } catch (IOException e) {
+            System.out.println("Something wrong.....");
+        }
+        while(option!=7){
+            System.out.println("Choose Any Option...");
+            System.out.println("1. SignUp");
+            System.out.println("2. Login");
+            System.out.println("3. Fetch Bookings");
+            System.out.println("4. Search Trains");
+            System.out.println("5. Book a seat");
+            System.out.println("6. Cancel My Bookings");
+            System.out.println("7. Exit the app");
+
+            option = scn.nextInt();
+
+             switch(option){
+                 case 1:
+                     System.out.println("Enter your name to sign up:");
+                     String nameToSignUp = scn.next();
+                     System.out.println("Enter the password to signup");
+                     String passwordToSignUp = scn.next();
+                     User userToSignUp = new User(nameToSignUp,passwordToSignUp,UserServiceUtil.hashPassword(passwordToSignUp),new ArrayList<>(), UUID.randomUUID().toString());
+//                     try{
+//                         userbookingService = new UserBookingService(userToSignUp);
+//                     }catch (IOException ex){
+//                         System.out.println("error creating userbooking service" + userToSignUp);
+//                     }
+                     userbookingService.signUp(userToSignUp);
+                     break;
+
+                     case 2:
+                         System.out.println("Enter your name to login");
+                         String nameToLogin = scn.next();
+                         System.out.println("Enter your password to login");
+                         String passwordToLogin = scn.next();
+                         User userToLogin = new User(nameToLogin,passwordToLogin,UserServiceUtil.hashPassword(passwordToLogin),new ArrayList<>(), UUID.randomUUID().toString());
+                     try{
+                         userbookingService = new UserBookingService(userToLogin);
+                     }catch (IOException ex){
+                         return;
+                     }
+
+                 case 3:
+                     System.out.println("Fetch Your bookings...");
+                     userbookingService.fetchBookings();
+                     break;
+
+                 case 4:
+                     System.out.println("Enter your Source Station Name");
+                     String source =scn.next();
+                     System.out.println("Enter your Destination Station Name");
+                     String destination = scn.next();
+                     System.out.println("Searching Trains...");
+                     List<Train> availTrains = userbookingService.searchTrains(source,destination);
+
+                     break;
+
+                 case 5:
+                     System.out.println("Book a seat...");
+                     break;
+
+                 case 6:
+                     System.out.println("Cancel my booking");
+                     break;
+
+                 default:
+                     break;
+             }
+
+        }
     }
 }

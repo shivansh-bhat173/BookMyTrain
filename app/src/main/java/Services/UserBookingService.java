@@ -1,6 +1,6 @@
 package Services;
 
-import Entities.Ticket;
+import Entities.Train;
 import Entities.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,7 @@ import util.UserServiceUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +23,21 @@ public class UserBookingService {
 
     private static final String USERS_PATH = "app/src/main/java/localDb/user.json";
 
+    private static final String TRAINS_PATH = "app/src/main/java/localDb/trains.json";
+
+    public UserBookingService() throws IOException {
+       loadUsers();
+    }
     public UserBookingService(User user) throws IOException {
         this.user = user;
+        loadUsers();
+    }
+    // loads users from the JSOn format file
+    public List<User> loadUsers() throws IOException{
         File usersFile = new File(USERS_PATH);
         // this deserializes users into list of users
         userList = objectMapper.readValue(usersFile, new TypeReference<List<User>>(){});
-
+        return userList;
     }
 
     public Boolean loginUser(){
@@ -43,9 +53,9 @@ public class UserBookingService {
         try {
             userList.add(user1);
             SaveUserListToFile();
-            return true;
+            return Boolean.TRUE;
         }catch (IOException ex){
-            return false;
+            return Boolean.FALSE;
         }
     }
 
@@ -67,21 +77,18 @@ public class UserBookingService {
     // cancel bookingss
 
     public Boolean cancelBooking(String ticketId){
-         Optional<Ticket> cancelledTicket= user.getTicketsBooked().stream().filter(ticket1 -> {
-            return ticket1.getTicketId().equals(ticketId);
-        }).findAny();
+       boolean removed =  user.getTicketsBooked().removeIf(ticket ->ticketId.equalsIgnoreCase(ticket.getTicketId()));
+        if(removed){
+            return Boolean.TRUE;
+        }else return Boolean.FALSE;
+    }
 
-//        if(!cancelledTicket.isPresent())return Boolean.FALSE;
-//        user.getTicketsBooked().remove(cancelledTicket);
-//        userList.stream().filter(user1 -> {
-//            return user1.getUserId().equalsIgnoreCase(user.getUserId());
-//        }).
-        try {
-            File usersFile = new File(USERS_PATH);
-            objectMapper.writeValue(usersFile,userList);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public List<Train> searchTrains(String source, String destination) {
+        try{
+            TrainService trainService = new TrainService();
+            return trainService.getTrains(source, destination);
+        }catch(IOException ex){
+            return new ArrayList<>();
         }
-        return Boolean.TRUE;
     }
 }
