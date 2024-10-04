@@ -1,7 +1,7 @@
 [
   {
-    "train_id": "bacs",
-    "train_no": 12345,
+    "train_id": "Rajdhani Express",
+    "train_no": 23132,
     "seats": [
       [0,0,0,0,0,0],
       [0,0,0,0,0,0],
@@ -20,7 +20,7 @@
     ]
   },
   {
-    "train_id": "bacs",
+    "train_id": "Khajani Express",
     "train_no": 12345,
     "seats": [
       [0,0,0,0,0,0],
@@ -34,9 +34,29 @@
       "delhi": "13:50:00"
     },
     "stations": [
-      "bangalore",
+      "jammu",
       "jaipur",
       "delhi"
+    ]
+  },
+  {
+    "train_id": "Vande Bharat Express",
+    "train_no": 213434,
+    "seats": [
+      [0,0,0,0,0,0],
+      [0,0,0,0,0,0],
+      [0,0,0,0,0,0],
+      [0,0,0,0,0,0]
+    ],
+    "station_times": {
+      "bangalore": "13:50:00",
+      "jaipur": "13:50:00",
+      "delhi": "13:50:00"
+    },
+    "stations": [
+      "jammu",
+      "jaipur",
+      "Himachal"
     ]
   }
 ]

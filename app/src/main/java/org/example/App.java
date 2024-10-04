@@ -46,11 +46,7 @@ public class App {
                      System.out.println("Enter the password to signup");
                      String passwordToSignUp = scn.next();
                      User userToSignUp = new User(nameToSignUp,passwordToSignUp,UserServiceUtil.hashPassword(passwordToSignUp),new ArrayList<>(), UUID.randomUUID().toString());
-//                     try{
-//                         userbookingService = new UserBookingService(userToSignUp);
-//                     }catch (IOException ex){
-//                         System.out.println("error creating userbooking service" + userToSignUp);
-//                     }
+                     // just save to the db and dont initialize it as the user in the service
                      userbookingService.signUp(userToSignUp);
                      break;
 
@@ -60,14 +56,21 @@ public class App {
                          System.out.println("Enter your password to login");
                          String passwordToLogin = scn.next();
                          User userToLogin = new User(nameToLogin,passwordToLogin,UserServiceUtil.hashPassword(passwordToLogin),new ArrayList<>(), UUID.randomUUID().toString());
-                     try{
-                         userbookingService = new UserBookingService(userToLogin);
-                     }catch (IOException ex){
-                         return;
-                     }
+                         try{
+                         if(!userbookingService.ValidateUser(userToLogin)){
+                             System.out.println("User Not found!");
+                             break;
+                         }else{
+                             System.out.println("User Logged IN..");
+                         }
 
+                             userbookingService = new UserBookingService(userToLogin);
+                         }catch (IOException ex){
+                             return;
+                         }
+                        break;
                  case 3:
-                     System.out.println("Fetch Your bookings...");
+                     System.out.println("Fetching Your bookings...");
                      userbookingService.fetchBookings();
                      break;
 
@@ -78,11 +81,12 @@ public class App {
                      String destination = scn.next();
                      System.out.println("Searching Trains...");
                      List<Train> availTrains = userbookingService.searchTrains(source,destination);
-
+                     for(Train train : availTrains) System.out.println(train.getTrainInfo());
                      break;
 
                  case 5:
                      System.out.println("Book a seat...");
+                     userbookingService.bookSeat();
                      break;
 
                  case 6:

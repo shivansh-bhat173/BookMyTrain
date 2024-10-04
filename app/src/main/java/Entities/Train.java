@@ -1,8 +1,14 @@
 package Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import java.util.List;
 import java.util.Map;
 
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Train {
     private String trainId;
     private long trainNo;
@@ -13,6 +19,7 @@ public class Train {
     public String getTrainId() {
         return trainId;
     }
+    public Train(){}
 
     public Train(String trainId, long trainNo, List<List<Integer>> seats, Map<String, String> stationTimes, List<String> stations) {
         this.trainId = trainId;
@@ -59,7 +66,7 @@ public class Train {
     }
 
     public String getTrainInfo(){
-        return String.format("Train ID : %s Train No : %s",trainId,trainNo);
+        return String.format("Train Name : %s Train No : %s",trainId,trainNo);
     }
 
 }

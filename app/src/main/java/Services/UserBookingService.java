@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import util.UserServiceUtil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class UserBookingService {
     // to map object to the json Object values
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final String USERS_PATH = "app/src/main/java/localDb/user.json";
+    private static final String USERS_PATH = "localDb/users.json";
 
     private static final String TRAINS_PATH = "app/src/main/java/localDb/trains.json";
 
@@ -33,8 +34,8 @@ public class UserBookingService {
         loadUsers();
     }
     // loads users from the JSOn format file
-    public List<User> loadUsers() throws IOException{
-        File usersFile = new File(USERS_PATH);
+    public List<User> loadUsers() throws IOException,FileNotFoundException{
+            File usersFile = new File(USERS_PATH);
         // this deserializes users into list of users
         userList = objectMapper.readValue(usersFile, new TypeReference<List<User>>(){});
         return userList;
@@ -71,6 +72,7 @@ public class UserBookingService {
     //fetch booking
 
     public void fetchBookings(){
+        System.out.println(user.getTicketsBooked());
         user.printTickets();
     }
 
@@ -90,5 +92,21 @@ public class UserBookingService {
         }catch(IOException ex){
             return new ArrayList<>();
         }
+    }
+
+    public Boolean ValidateUser(User user1){
+        if(user1==null){
+            System.out.println("No user logged in!");
+            return false;
+        }
+        Optional<User> validUser = userList.stream().filter(user -> user.getName().equalsIgnoreCase(user1.getName())
+                && user.getPassword().equalsIgnoreCase(user1.getPassword())).findAny();
+
+        if(validUser.isPresent()){
+            return true;
+        }else return false;
+    }
+
+    public void bookSeat() {
     }
 }
