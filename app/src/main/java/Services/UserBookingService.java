@@ -107,6 +107,6 @@ public class UserBookingService {
         }else return false;
     }
 
-    public void bookSeat() {
-    }
+
+
 }

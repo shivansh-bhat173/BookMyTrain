@@ -5,14 +5,12 @@ package org.example;
 
 import Entities.Train;
 import Entities.User;
+import Services.TrainService;
 import Services.UserBookingService;
 import util.UserServiceUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 public class App {
 
@@ -22,11 +20,14 @@ public class App {
         Scanner scn = new Scanner(System.in);
         int option = 0;
         UserBookingService userbookingService = null;
+        TrainService trainService = null;
         try{
              userbookingService = new UserBookingService();
+             trainService = new TrainService();
         } catch (IOException e) {
             System.out.println("Something wrong.....");
         }
+        Train selectedTrain = new Train();
         while(option!=7){
             System.out.println("Choose Any Option...");
             System.out.println("1. SignUp");
@@ -36,7 +37,6 @@ public class App {
             System.out.println("5. Book a seat");
             System.out.println("6. Cancel My Bookings");
             System.out.println("7. Exit the app");
-
             option = scn.nextInt();
 
              switch(option){
@@ -81,12 +81,48 @@ public class App {
                      String destination = scn.next();
                      System.out.println("Searching Trains...");
                      List<Train> availTrains = userbookingService.searchTrains(source,destination);
-                     for(Train train : availTrains) System.out.println(train.getTrainInfo());
+                     Map<String,String> TrainsToSelect = new HashMap<String,String>();
+                     int index = 1;
+                     for (Train t: availTrains){
+                         System.out.println(index+" Train id : "+t.getTrainId());
+                         for (Map.Entry<String, String> entry: t.getStationTimes().entrySet()) {
+                             System.out.println("station " + entry.getKey() + " time: " + entry.getValue());
+                         }
+                         index++;
+                     }
+                     System.out.println("Select a train by typing 1,2,3...");
+                     selectedTrain = availTrains.get(scn.nextInt()-1);
+                     System.out.println("Selected train is " + selectedTrain.getTrainId());
                      break;
 
                  case 5:
-                     System.out.println("Book a seat...");
-                     userbookingService.bookSeat();
+                     System.out.println("Available seats For your Chosen Train "+ selectedTrain.getTrainId());
+                     List<List<Integer>> seats = trainService.getSeats(selectedTrain);
+                     for(List<Integer> row:seats){
+                         for(Integer seat:row){
+
+                             if(seat==0){
+                                 System.out.print("[A]" +" ");
+                             }else System.out.print("[B]"+" ");
+                         }
+                         System.out.println();
+                 }
+                     System.out.println("Select a row between 1-4");
+                     int row = scn.nextInt();
+                     System.out.println("Select a seat number between 1-6");
+                     int column = scn.nextInt();
+                     if(row<1 || row>4 || column<1 || column>6) {
+                         System.out.println("Note a valid Seat number");
+                        break;
+                     }
+                     System.out.println("Booking your Chosen Seat");
+                     boolean isBooked = trainService.bookSeat(selectedTrain,row,column);
+                     if(isBooked){
+//                         userbookingService.addBooking();
+                         System.out.println("Your selected seat is booked. Enjoy Your journey!");
+                     }else{
+                         System.out.println("Your selected seat is alreadyBooked");
+                     }
                      break;
 
                  case 6:

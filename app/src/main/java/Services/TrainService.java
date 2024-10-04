@@ -10,19 +10,36 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TrainService{
+    Train train;
+
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final String TRAINS_PATH = "localDb/trains.json";
 
+    public TrainService(Train train) throws IOException{
+        this.train = train;
+        loadFromDB();
+    }
     public TrainService() throws IOException{
         loadFromDB();
     }
-
+    public List<List<Integer>> getSeats(Train train){
+        return train.getSeats();
+    }
     public List<Train> loadFromDB() throws IOException{
         File trainsFile = new File(TRAINS_PATH);
         List<Train> trainsList = objectMapper.readValue(trainsFile, new TypeReference<List<Train>>(){});
         return trainsList;
     }
-
+    public boolean bookSeat(Train train,int row,int column){
+        row--;
+        column--;
+        List<List<Integer>> seats = train.getSeats();
+         boolean canBook = seats.get(row).get(column)==0?true:false;
+        if(canBook){
+            seats.get(row).set(column,1);
+            return true;
+        } else return false;
+    }
     public List<Train> getTrains(String source, String destination) throws IOException {
         List<Train> trainsList = loadFromDB();
         return trainsList.stream().filter(train-> validTrains(train,source,destination)).collect(Collectors.toList());
