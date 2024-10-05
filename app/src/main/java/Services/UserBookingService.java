@@ -72,6 +72,10 @@ public class UserBookingService {
     //fetch booking
 
     public void fetchBookings(){
+        if(user==null){
+            System.out.println("Please SignUp/Login First!!");
+           return;
+        }
         System.out.println(user.getTicketsBooked());
         user.printTickets();
     }

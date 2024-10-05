@@ -48,6 +48,7 @@ public class App {
                      User userToSignUp = new User(nameToSignUp,passwordToSignUp,UserServiceUtil.hashPassword(passwordToSignUp),new ArrayList<>(), UUID.randomUUID().toString());
                      // just save to the db and dont initialize it as the user in the service
                      userbookingService.signUp(userToSignUp);
+                     System.out.println("Signed Up Successfully!");
                      break;
 
                      case 2:
@@ -108,12 +109,15 @@ public class App {
                          System.out.println();
                  }
                      System.out.println("Select a row between 1-4");
-                     int row = scn.nextInt();
+                     int row=scn.nextInt();;
                      System.out.println("Select a seat number between 1-6");
-                     int column = scn.nextInt();
-                     if(row<1 || row>4 || column<1 || column>6) {
+                     int column=scn.nextInt();
+                     while(row<1 || row>4 || column<1 || column>6) {
                          System.out.println("Note a valid Seat number");
-                        break;
+                         System.out.println("Select a row between 1-4");
+                         row = scn.nextInt();
+                         System.out.println("Select a seat number between 1-6");
+                         column = scn.nextInt();
                      }
                      System.out.println("Booking your Chosen Seat");
                      boolean isBooked = trainService.bookSeat(selectedTrain,row,column);
@@ -126,7 +130,8 @@ public class App {
                      break;
 
                  case 6:
-                     System.out.println("Cancel my booking");
+                     System.out.println("Your current train is "+selectedTrain);
+
                      break;
 
                  default:

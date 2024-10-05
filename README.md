@@ -1,1 +1,1 @@
-A ticket booking APP backend with Java, Gradle ,Jcrypt
+A railway ticket booking application using Java(Collections,streams,Lambda,Optional,OOPs,LLD), build with Gradle and Jcrpyt for hashing. 
